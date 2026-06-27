@@ -1,5 +1,6 @@
 #include "memory.hpp"
 
+#include <algorithm>
 #include <iomanip>
 #include <ostream>
 #include <stdexcept>
@@ -37,7 +38,7 @@ void Memory::validateRange(
 
     if (lastAddress > 0xFFFFFFFFULL) {
         throw std::out_of_range(
-            "Memory access exceeds the 32-bit address space"
+            "El acceso a memoria excede el espacio de direcciones de 32 bits"
         );
     }
 }
@@ -137,6 +138,34 @@ void Memory::write32(
         address + 3,
         static_cast<std::uint8_t>((value >> 24) & 0xFFU)
     );
+}
+
+std::uint64_t Memory::fingerprint() const {
+    std::vector<std::pair<std::uint32_t, std::uint8_t>> bytes(
+        bytes_.begin(),
+        bytes_.end()
+    );
+    std::sort(bytes.begin(), bytes.end());
+
+    std::uint64_t hash = 1469598103934665603ull;
+
+    auto mixByte = [&hash](std::uint8_t value) {
+        hash ^= value;
+        hash *= 1099511628211ull;
+    };
+
+    auto mixWord = [&mixByte](std::uint32_t value) {
+        for (int shift = 0; shift < 32; shift += 8) {
+            mixByte(static_cast<std::uint8_t>(value >> shift));
+        }
+    };
+
+    for (const auto& [address, value] : bytes) {
+        mixWord(address);
+        mixByte(value);
+    }
+
+    return hash;
 }
 
 void Memory::dump(

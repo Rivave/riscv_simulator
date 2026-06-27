@@ -1,5 +1,6 @@
 #include "cpu.hpp"
 
+#include <cstdint>
 #include <iomanip>
 #include <ostream>
 #include <stdexcept>
@@ -23,7 +24,7 @@ void CPU::setPc(std::uint32_t value) {
 
 std::uint32_t CPU::readRegister(std::size_t index) const {
     if (index >= registers_.size()) {
-        throw std::out_of_range("Invalid RISC-V register index");
+        throw std::out_of_range("Índice de registro RISC-V inválido");
     }
 
     return registers_[index];
@@ -31,7 +32,7 @@ std::uint32_t CPU::readRegister(std::size_t index) const {
 
 void CPU::writeRegister(std::size_t index, std::uint32_t value) {
     if (index >= registers_.size()) {
-        throw std::out_of_range("Invalid RISC-V register index");
+        throw std::out_of_range("Índice de registro RISC-V inválido");
     }
 
     if (index == 0) {
@@ -39,6 +40,24 @@ void CPU::writeRegister(std::size_t index, std::uint32_t value) {
     }
 
     registers_[index] = value;
+}
+
+std::uint64_t CPU::fingerprint() const {
+    std::uint64_t hash = 1469598103934665603ull;
+
+    auto mix = [&hash](std::uint32_t value) {
+        for (int shift = 0; shift < 32; shift += 8) {
+            hash ^= static_cast<std::uint8_t>(value >> shift);
+            hash *= 1099511628211ull;
+        }
+    };
+
+    mix(pc_);
+    for (std::uint32_t value : registers_) {
+        mix(value);
+    }
+
+    return hash;
 }
 
 void CPU::dumpState(std::ostream& output) const {

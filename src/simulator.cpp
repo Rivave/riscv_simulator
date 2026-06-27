@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <limits>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
@@ -49,6 +50,11 @@ void Simulator::reset() {
     exitCode_ = 0;
 }
 
+void Simulator::halt(int exitCode) {
+    halted_ = true;
+    exitCode_ = exitCode;
+}
+
 bool Simulator::halted() const {
     return halted_;
 }
@@ -73,6 +79,12 @@ const Memory& Simulator::memory() const {
     return memory_;
 }
 
+std::uint64_t Simulator::stateFingerprint() const {
+    std::uint64_t hash = cpu_.fingerprint();
+    hash ^= memory_.fingerprint() + 0x9E3779B97F4A7C15ull + (hash << 6) + (hash >> 2);
+    return hash;
+}
+
 StepStatus Simulator::step() {
     if (halted_) {
         return StepStatus::Halted;
@@ -84,7 +96,7 @@ StepStatus Simulator::step() {
 
     if (instruction.mnemonic == Mnemonic::Invalid) {
         std::ostringstream message;
-        message << "Instruccion invalida en 0x" << std::hex << std::uppercase
+        message << "Instrucción inválida en 0x" << std::hex << std::uppercase
                 << pc << " (0x" << raw << ")";
         throw std::runtime_error(message.str());
     }
@@ -292,6 +304,7 @@ void Simulator::handleEcall() {
         case 5: {
             std::int32_t value = 0;
             std::cin >> value;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             cpu_.writeRegister(
                 kRegisterA0,
                 static_cast<std::uint32_t>(value)
@@ -338,16 +351,16 @@ void Simulator::handleEcall() {
             break;
         }
         case 10:
-            halted_ = true;
-            exitCode_ = 0;
+            halt(0);
             break;
         case 17:
-            halted_ = true;
-            exitCode_ = static_cast<std::int32_t>(
+            halt(static_cast<std::int32_t>(
                 cpu_.readRegister(kRegisterA0)
-            );
+            ));
             break;
         default:
-            break;
+            throw std::runtime_error(
+                "Número de syscall no soportado: " + std::to_string(which)
+            );
     }
 }

@@ -25,6 +25,8 @@ public:
     void write16(std::uint32_t address, std::uint16_t value);
     void write32(std::uint32_t address, std::uint32_t value);
 
+    [[nodiscard]] std::uint64_t fingerprint() const;
+
     void dump(
         std::ostream& output,
         std::uint32_t startAddress,

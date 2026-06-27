@@ -16,11 +16,13 @@ class Simulator {
 public:
     void loadProgramFromFile(const std::string& path);
     void reset();
+    void halt(int exitCode = 0);
 
     StepStatus step();
 
     [[nodiscard]] bool halted() const;
     [[nodiscard]] int exitCode() const;
+    [[nodiscard]] std::uint64_t stateFingerprint() const;
 
     [[nodiscard]] CPU& cpu();
     [[nodiscard]] const CPU& cpu() const;

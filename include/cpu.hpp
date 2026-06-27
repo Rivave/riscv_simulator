@@ -16,6 +16,7 @@ public:
 
     [[nodiscard]] std::uint32_t readRegister(std::size_t index) const;
     void writeRegister(std::size_t index, std::uint32_t value);
+    [[nodiscard]] std::uint64_t fingerprint() const;
     void dumpState(std::ostream& output) const;
 
 private:

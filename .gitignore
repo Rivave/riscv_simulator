@@ -1,0 +1,15 @@
+build/
+*.zip
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.tlog
+*.user
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.sln
+*.slnx
+*.log
+

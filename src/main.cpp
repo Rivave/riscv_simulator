@@ -10,15 +10,16 @@
 #include <optional>
 #include <sstream>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace {
 
 const std::array<const char*, 32> kAbiNames = {
-    "zero", "ra", "sp", "gp", "t0", "t1", "t2", "s0",
-    "s1", "a0", "a1", "a2", "a3", "a4", "a5", "a6",
-    "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8",
-    "s9", "s10", "s11", "t3", "t4", "t5", "t6"
+    "zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+    "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+    "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+    "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
 constexpr std::uint64_t kMaxRunSteps = 100000000ull;
@@ -83,7 +84,7 @@ void printRegister(std::size_t index, std::uint32_t value) {
 void commandStep(Simulator& simulator, std::uint64_t count) {
     for (std::uint64_t i = 0; i < count; ++i) {
         if (simulator.halted()) {
-            std::cout << "El programa ya termino.\n";
+            std::cout << "El programa ya terminó.\n";
             return;
         }
 
@@ -96,7 +97,7 @@ void commandStep(Simulator& simulator, std::uint64_t count) {
         simulator.step();
 
         if (simulator.halted()) {
-            std::cout << "Programa finalizado (codigo "
+            std::cout << "Programa finalizado (código "
                       << simulator.exitCode() << ").\n";
             return;
         }
@@ -105,24 +106,28 @@ void commandStep(Simulator& simulator, std::uint64_t count) {
 
 void commandRun(Simulator& simulator) {
     std::uint64_t executed = 0;
+    std::unordered_set<std::uint64_t> seenStates;
 
     while (!simulator.halted() && executed < kMaxRunSteps) {
-        const std::uint32_t pc = simulator.cpu().pc();
-        simulator.step();
-        ++executed;
-
-        if (simulator.cpu().pc() == pc && !simulator.halted()) {
-            std::cout << "Loop infinito detectado en " << formatWord(pc)
+        const std::uint64_t state = simulator.stateFingerprint();
+        const auto [_, inserted] = seenStates.insert(state);
+        if (!inserted) {
+            simulator.halt();
+            std::cout << "Ciclo infinito detectado en "
+                      << formatWord(simulator.cpu().pc())
                       << " (programa finalizado).\n";
             return;
         }
+
+        simulator.step();
+        ++executed;
     }
 
     if (simulator.halted()) {
-        std::cout << "Programa finalizado (codigo "
+        std::cout << "Programa finalizado (código "
                   << simulator.exitCode() << ").\n";
     } else {
-        std::cout << "Limite de instrucciones alcanzado.\n";
+        std::cout << "Límite de instrucciones alcanzado.\n";
     }
 }
 
@@ -143,7 +148,7 @@ void commandRegs(Simulator& simulator, const std::vector<std::string>& args) {
 
         const auto index = parseRegister(token);
         if (!index) {
-            std::cout << "Registro invalido: " << token << '\n';
+            std::cout << "Registro inválido: " << token << '\n';
             continue;
         }
 
@@ -161,7 +166,7 @@ void commandMem(Simulator& simulator, const std::vector<std::string>& args) {
     const auto end = parseNumber(args[1]);
 
     if (!start || !end) {
-        std::cout << "Direcciones invalidas.\n";
+        std::cout << "Direcciones inválidas.\n";
         return;
     }
 
@@ -192,7 +197,7 @@ void printHelp() {
         << "Comandos disponibles:\n"
         << "  load <archivo>      Carga un binario crudo en 0x00000000\n"
         << "  step [n]            Ejecuta n instrucciones (por defecto 1)\n"
-        << "  run                 Ejecuta hasta terminar o detectar un loop\n"
+        << "  run                 Ejecuta hasta terminar o detectar un ciclo de estado\n"
         << "  pc                  Muestra el contador de programa\n"
         << "  regs [r1 r2 ...]    Muestra registros (todos si no se indican)\n"
         << "  mem <inicio> <fin>  Muestra memoria en el rango dado\n"
@@ -288,8 +293,9 @@ int main(int argc, char** argv) {
         }
     }
 
-    std::cout << "See you next time...\n";
-    std::cout << "Program exited with code " << simulator.exitCode() << ".\n";
+    std::cout << "Hasta luego.\n";
+    std::cout << "Programa finalizado con código "
+              << simulator.exitCode() << ".\n";
 
-    return 0;
+    return simulator.exitCode();
 }

@@ -17,7 +17,7 @@ add_executable(riscv-sim
 target_include_directories(riscv-sim PRIVATE include)
 
 if(MSVC)
-    target_compile_options(riscv-sim PRIVATE /W4)
+    target_compile_options(riscv-sim PRIVATE /W4 /utf-8)
 else()
     target_compile_options(
         riscv-sim
@@ -25,5 +25,15 @@ else()
         -Wall
         -Wextra
         -Wpedantic
+    )
+endif()
+
+enable_testing()
+
+find_package(Python3 COMPONENTS Interpreter)
+if(Python3_Interpreter_FOUND)
+    add_test(
+        NAME simulator_programs
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/run_tests.py
     )
 endif()
