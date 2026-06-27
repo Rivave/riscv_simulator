@@ -1,3 +1,5 @@
 C:\Users\nicov\VSC_Proyects\riscv_simulator\src\main.cpp;C:\Users\nicov\VSC_Proyects\riscv_simulator\build\riscv-sim.dir\Debug\main.obj
 C:\Users\nicov\VSC_Proyects\riscv_simulator\src\cpu.cpp;C:\Users\nicov\VSC_Proyects\riscv_simulator\build\riscv-sim.dir\Debug\cpu.obj
 C:\Users\nicov\VSC_Proyects\riscv_simulator\src\memory.cpp;C:\Users\nicov\VSC_Proyects\riscv_simulator\build\riscv-sim.dir\Debug\memory.obj
+C:\Users\nicov\VSC_Proyects\riscv_simulator\src\instruction.cpp;C:\Users\nicov\VSC_Proyects\riscv_simulator\build\riscv-sim.dir\Debug\instruction.obj
+C:\Users\nicov\VSC_Proyects\riscv_simulator\src\simulator.cpp;C:\Users\nicov\VSC_Proyects\riscv_simulator\build\riscv-sim.dir\Debug\simulator.obj

@@ -375,6 +375,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\nicov\VSC_Proyects\riscv_simulator\src\main.cpp" />
     <ClCompile Include="C:\Users\nicov\VSC_Proyects\riscv_simulator\src\cpu.cpp" />
     <ClCompile Include="C:\Users\nicov\VSC_Proyects\riscv_simulator\src\memory.cpp" />
+    <ClCompile Include="C:\Users\nicov\VSC_Proyects\riscv_simulator\src\instruction.cpp" />
+    <ClCompile Include="C:\Users\nicov\VSC_Proyects\riscv_simulator\src\simulator.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

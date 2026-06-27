@@ -4,12 +4,18 @@
 #include <cstdint>
 #include <iosfwd>
 #include <unordered_map>
+#include <vector>
 
 class Memory {
 public:
     Memory() = default;
 
     void clear();
+
+    void loadProgram(
+        std::uint32_t address,
+        const std::vector<std::uint8_t>& program
+    );
 
     [[nodiscard]] std::uint8_t read8(std::uint32_t address) const;
     [[nodiscard]] std::uint16_t read16(std::uint32_t address) const;

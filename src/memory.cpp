@@ -8,6 +8,20 @@ void Memory::clear() {
     bytes_.clear();
 }
 
+void Memory::loadProgram(
+    std::uint32_t address,
+    const std::vector<std::uint8_t>& program
+) {
+    validateRange(address, program.size());
+
+    for (std::size_t offset = 0; offset < program.size(); ++offset) {
+        write8(
+            address + static_cast<std::uint32_t>(offset),
+            program[offset]
+        );
+    }
+}
+
 void Memory::validateRange(
     std::uint32_t address,
     std::size_t byteCount

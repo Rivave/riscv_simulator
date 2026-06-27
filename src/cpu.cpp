@@ -17,6 +17,10 @@ std::uint32_t CPU::pc() const {
     return pc_;
 }
 
+void CPU::setPc(std::uint32_t value) {
+    pc_ = value;
+}
+
 std::uint32_t CPU::readRegister(std::size_t index) const {
     if (index >= registers_.size()) {
         throw std::out_of_range("Invalid RISC-V register index");
@@ -30,7 +34,6 @@ void CPU::writeRegister(std::size_t index, std::uint32_t value) {
         throw std::out_of_range("Invalid RISC-V register index");
     }
 
-    // El registro x0 de RISC-V siempre debe valer cero.
     if (index == 0) {
         return;
     }

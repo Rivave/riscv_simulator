@@ -10,6 +10,8 @@ add_executable(riscv-sim
     src/main.cpp
     src/cpu.cpp
     src/memory.cpp
+    src/instruction.cpp
+    src/simulator.cpp
 )
 
 target_include_directories(riscv-sim PRIVATE include)

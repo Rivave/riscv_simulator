@@ -12,8 +12,9 @@ public:
     void reset();
 
     [[nodiscard]] std::uint32_t pc() const;
-    [[nodiscard]] std::uint32_t readRegister(std::size_t index) const;
+    void setPc(std::uint32_t value);
 
+    [[nodiscard]] std::uint32_t readRegister(std::size_t index) const;
     void writeRegister(std::size_t index, std::uint32_t value);
     void dumpState(std::ostream& output) const;
 
