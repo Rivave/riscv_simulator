@@ -7,6 +7,9 @@
     <ClCompile Include="C:\Users\nicov\VSC_Proyects\riscv_simulator\src\cpu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\nicov\VSC_Proyects\riscv_simulator\src\memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\nicov\VSC_Proyects\riscv_simulator\CMakeLists.txt" />

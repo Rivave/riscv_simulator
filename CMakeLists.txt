@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(riscv-sim
     src/main.cpp
     src/cpu.cpp
+    src/memory.cpp
 )
 
 target_include_directories(riscv-sim PRIVATE include)
@@ -16,5 +17,11 @@ target_include_directories(riscv-sim PRIVATE include)
 if(MSVC)
     target_compile_options(riscv-sim PRIVATE /W4)
 else()
-    target_compile_options(riscv-sim PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(
+        riscv-sim
+        PRIVATE
+        -Wall
+        -Wextra
+        -Wpedantic
+    )
 endif()
