@@ -1,0 +1,3 @@
+C:/Users/nicov/VSC_Proyects/riscv_simulator/build/CMakeFiles/riscv-sim.dir
+C:/Users/nicov/VSC_Proyects/riscv_simulator/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/nicov/VSC_Proyects/riscv_simulator/build/CMakeFiles/ZERO_CHECK.dir
