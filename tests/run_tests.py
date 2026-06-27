@@ -69,8 +69,35 @@ def test_infinite_loop() -> None:
     assert_contains(output, "Ciclo infinito detectado")
 
 
+def test_riscvtest() -> None:
+    # Harris & Harris riscvtest.s: ejercita add, sub, and, or, slt, addi,
+    # lw, sw, beq y jal. Debe escribir 25 (0x19) en la dirección 100 (0x64).
+    output = run_sim("riscvtest.bin", ["run", "regs x2", "mem 0x64 0x67", "exit"])
+    assert_contains(output, "x2 = 0x00000019")
+    assert_contains(output, "Memoria (0x00000064-0x00000067): 19 00 00 00")
+
+
+def test_quicksort() -> None:
+    # Coloca {6,4,3,2,1,8,9} en 0x1000 y aplica quicksort in-place recursivo.
+    # Ejercita jal/jalr (call/ret), pila y branches. Resultado: {1,2,3,4,6,8,9}.
+    output = run_sim("quicksort.bin", ["run", "mem 0x1000 0x101b", "exit"])
+    assert_contains(
+        output,
+        "Memoria (0x00001000-0x0000101B): "
+        "01 00 00 00 02 00 00 00 03 00 00 00 04 00 00 00 "
+        "06 00 00 00 08 00 00 00 09 00 00 00",
+    )
+
+
 def main() -> int:
-    tests = [test_arithmetic, test_abi_names, test_memory, test_infinite_loop]
+    tests = [
+        test_arithmetic,
+        test_abi_names,
+        test_memory,
+        test_infinite_loop,
+        test_riscvtest,
+        test_quicksort,
+    ]
     for test in tests:
         test()
         print(f"{test.__name__}: OK")

@@ -27,3 +27,21 @@ Ejecuta `j .`. Sirve para validar la detección de ciclos de estado.
 
 - Esperado: `run` informa `Ciclo infinito detectado`
 
+## riscvtest
+
+Programa de prueba de Harris & Harris (`riscvtest.s`). Ejercita `add`, `sub`,
+`and`, `or`, `slt`, `addi`, `lw`, `sw`, `beq` y `jal`. El `.bin` se generó a
+partir del código máquina anotado en el propio `.s`.
+
+- Esperado: `x2 = 0x00000019` (25)
+- Esperado: `mem 0x64 0x67` muestra `19 00 00 00` (escribe 25 en la dirección 100)
+- Termina en un bucle infinito detectado por `run`
+
+## quicksort
+
+Quicksort in-place recursivo (de la guía). Coloca `{6,4,3,2,1,8,9}` en
+`0x1000` y lo ordena. Ejercita `jal`/`jalr` (`call`/`ret`), pila y branches.
+
+- Esperado: `mem 0x1000 0x101b` muestra el arreglo ordenado `{1,2,3,4,6,8,9}`
+- Termina en un bucle infinito (`j _end`) detectado por `run`
+
